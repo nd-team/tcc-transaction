@@ -5,7 +5,7 @@ import org.mengyun.tcctransaction.recover.TransactionRecovery;
 import org.mengyun.tcctransaction.support.TransactionConfigurator;
 import org.quartz.JobDetail;
 import org.quartz.Scheduler;
-import org.springframework.scheduling.quartz.CronTriggerBean;
+import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 
 /**
@@ -29,13 +29,13 @@ public class RecoverScheduledJob {
             jobDetail.setConcurrent(false);
             jobDetail.afterPropertiesSet();
 
-            CronTriggerBean cronTrigger = new CronTriggerBean();
+            CronTriggerFactoryBean cronTrigger = new CronTriggerFactoryBean();
             cronTrigger.setBeanName("transactionRecoveryCronTrigger");
 
             cronTrigger.setCronExpression(transactionConfigurator.getRecoverConfig().getCronExpression());
             cronTrigger.afterPropertiesSet();
 
-            scheduler.scheduleJob((JobDetail) jobDetail.getObject(), cronTrigger);
+            scheduler.scheduleJob((JobDetail) jobDetail.getObject(), cronTrigger.getObject());
 
             scheduler.start();
 
